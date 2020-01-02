@@ -79,7 +79,7 @@ def get_webhash(cookie):
     cookies = {"UTH_auth": cookie}
     resp = session.get(url, cookies=cookies)
     # 获取webhash
-    p = resp.text.find("BuSign") + len("BuSign('")
+    p = resp.text.find("WebSign") + len("WebSign('")
     webhash = resp.text[p:p + 8]
     return webhash
 
