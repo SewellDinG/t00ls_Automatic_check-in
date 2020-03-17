@@ -81,6 +81,7 @@ def get_webhash(cookie):
     # 获取webhash
     p = resp.text.find("WebSign") + len("WebSign('")
     webhash = resp.text[p:p + 8]
+    print("webhash:", webhash)
     return webhash
 
 # 签到
@@ -110,6 +111,7 @@ def automatic_checkin(webhash, cookie_UTH_auth):
     resp = session.post(url, data, cookies=cookies)
     content = resp.text
     print("resp.content:", content)
+    return content
 
 
 def get_md5(string):
@@ -133,7 +135,13 @@ def main():
     print("[+] answer:" + answer)
     cookie_UTH_auth = login(formhash, username, password, questionid, answer)
     webhash = get_webhash(cookie_UTH_auth)
-    automatic_checkin(webhash, cookie_UTH_auth)
+    content = automatic_checkin(webhash, cookie_UTH_auth)
+    if "success" in content:
+        url = "https://sc.ftqq.com/SCKEY.send?text=T00lsCheckinSuccess"
+        requests.get(url)
+    else:
+        url = "https://sc.ftqq.com/SCKEY.send?text=T00lsCheckinError"
+        requests.get(url)
 
 
 if __name__ == "__main__":
